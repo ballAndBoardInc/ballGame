@@ -1,0 +1,9 @@
+{
+  "name": "PubBServer",
+  "version": "1.0.0",
+  "description": "ball game server",
+  "main": "main.js",
+  "repository": "https://github.com/ballAndBoardInc/ballGame/tree/master/server",
+  "author": "Jade Lacosse & Aaron Janke",
+  "license": "MIT"
+}
