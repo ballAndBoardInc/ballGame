@@ -2,67 +2,115 @@ console.log('main.js is linked up')
 
 import * as BABYLON from 'babylonjs';
 
-window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('DOMContentLoaded', function () {
 
+   //CAVANSSES
    // Get the canvas DOM element
    var canvas = document.getElementById('renderCanvas');
 
+   //ENGINES
    // Load the 3D engine
    var engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
-
-   // CreateScene function that creates and return the scene
+   
+   
+   //CREATE SCENE
    var createScene = function () {
 
-      // Create a basic BJS Scene object
+      //SCENE
+      // This creates a basic Babylon Scene object (non-mesh)
       var scene = new BABYLON.Scene(engine);
 
-      // Create a FreeCamera, and set its position to {x: 0, y: 5, z: -10}
-      var camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 5, -40), scene);
+      //CAMERA
+      // This creates and positions a free camera (non-mesh)
+      var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 60, 0), scene);
 
-      // Target the camera to scene origin
+      // This targets the camera to scene origin
       camera.setTarget(BABYLON.Vector3.Zero());
 
-      // Attach the camera to the canvas
+      // This attaches the camera to the canvas
       camera.attachControl(canvas, false);
 
-      // Create a basic light, aiming 0, 1, 0 - meaning, to the sky
-      var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
+      //LIGHTS
+      // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
+      var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
 
-      // Create a built-in "sphere" shape; its constructor takes 6 params: name, segment, diameter, scene, updatable, sideOrientation
-      var sphere = BABYLON.Mesh.CreateSphere('sphere1', 16, 0.3, scene, false, BABYLON.Mesh.FRONTSIDE);
+      // Default intensity is 1. Let's dim the light a small amount
+      light.intensity = 0.7;
 
+      //OBJECTS
+      // Our built-in 'sphere' shape. Params: name, subdivs, size, scene
+      var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
+
+      // //OBJECT OPTIONS
       var boxOptions = {
-         height: 5, 
-         width: 2, 
+         height: 1,
+         width: 1,
          depth: 0.5
       };
 
-      // var myBox = BABYLON.MeshBuilder.CreateBox("myBox", boxOptions, scene)
+      //BOXES
+      var testBox = BABYLON.MeshBuilder.CreateBox("testBox", boxOptions, scene);
 
-      // var myGround = BABYLON.MeshBuilder.CreateGround("myGround", { width: 100, height: 100, subdivsions: 4 }, scene);
+      // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
+      var ground = BABYLON.Mesh.CreateGround("ground1", 15, 15, 2, scene);
 
-      // var myPlane = BABYLON.MeshBuilder.CreatePlane("myPlane", { width: 2, height: 15 }, scene);
+      // Move the sphere upward 1/2 its height
+      sphere.position.y = 5;
+      testBox.position.y = 2;
+      testBox.position.x = 1;
 
-      // myGround.position.y = - 10;
-      sphere.position.y = 1;
+      //PHYSICS
+      scene.enablePhysics();
 
-      // Create a built-in "ground" shape; its constructor takes 6 params : name, width, height, subdivision, scene, updatable
-      var ground = BABYLON.Mesh.CreateGround('ground1', 15, 15, 5, scene, false);
+      //PHYSICS IMPOSTERS
+      sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.9 }, scene);
 
-      // Return the created scene
+      testBox.physicsImpostor = new BABYLON.PhysicsImpostor(testBox, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.9 }, scene);
+
+      ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.9 }, scene);
+
+      //INTERVAL AND SHAPE GENERATOR
+
+      let i = 1;
+      let acceleration = 1000;
+      
+
+      function interval(acceleration) {
+         const interval = setInterval(newShape, acceleration);
+      }
+
+      function newShape() {
+         i = i + 1;
+         acceleration = acceleration + 100;
+         console.log(i, acceleration);
+         var newSphere = BABYLON.Mesh.CreateSphere("sphere1", 16, getRandom(0.5, 2), scene);
+         newSphere.position.y = getRandom(10, 15);
+         newSphere.position.x = getRandom(-5, 5);
+         newSphere.position.z = getRandom(-5, 5);
+         newSphere.physicsImpostor = new BABYLON.PhysicsImpostor(newSphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.9 }, scene);
+      };
+      interval(acceleration);
+
+      // RETURN THE SCENE
       return scene;
-   }
+   };
 
-
-   // call the createScene function
+   // CALLED SCENES
    var scene = createScene();
 
-   // run the render loop
+   //GET RANDOM NUMBER FUNCTION
+   function getRandom(min, max) {
+      return Math.random() * (max - min) + min;
+   };
+
+   // THE RENDER LOOP
    engine.runRenderLoop(function () {
+      // interval();
+      // newShape();
       scene.render();
    });
 
-   // the canvas/window resize event handler
+   // CANVAS EVENT HANDLER FOR BROWSER RESIZE
    window.addEventListener('resize', function () {
       engine.resize();
    });
