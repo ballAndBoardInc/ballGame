@@ -1,7 +1,7 @@
 console.log('main.js is linked up')
 
 import * as BABYLON from 'babylonjs';
-import * as GUI from 'babylonjs-gui';
+// import * as GUI from 'babylonjs-gui';
 
 // var ctx = document.querySelector("canvas").getContext("2d");
 
@@ -173,16 +173,16 @@ window.addEventListener('DOMContentLoaded', function () {
     interval();
 
     //GUI
-    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+    // var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
-    var rect1 = new BABYLON.GUI.Rectangle();
-    rect1.width = 0.2;
-    rect1.height = "40px";
-    rect1.cornerRadius = 20;
-    rect1.color = "Orange";
-    rect1.thickness = 4;
-    rect1.background = "green";
-    advancedTexture.addControl(rect1);   
+    // var rect1 = new BABYLON.GUI.Rectangle();
+    // rect1.width = 0.2;
+    // rect1.height = "40px";
+    // rect1.cornerRadius = 20;
+    // rect1.color = "Orange";
+    // rect1.thickness = 4;
+    // rect1.background = "green";
+    // advancedTexture.addControl(rect1);   
 
 
     //SHAPE DESTRUCTOR
