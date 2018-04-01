@@ -45,7 +45,7 @@ gulp.task('bs', () => {
 });
 
 gulp.task('default', ['styles', 'scripts', 'bs'], () => {
-   gulp.watch('./**/*.scss', ['styles']);
-   gulp.watch('./**/*.js', ['scripts']);
+   gulp.watch('./src/**/*.scss', ['styles']);
+   gulp.watch('./src/**/*.js', ['scripts']);
    gulp.watch('*.html', reload);
 });
