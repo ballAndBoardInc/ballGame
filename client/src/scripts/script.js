@@ -1,6 +1,7 @@
 console.log('main.js is linked up')
 
 import * as BABYLON from 'babylonjs';
+import * as GUI from 'babylonjs-gui';
 
 // var ctx = document.querySelector("canvas").getContext("2d");
 
@@ -160,23 +161,31 @@ window.addEventListener('DOMContentLoaded', function () {
       let interval = setTimeout(newShape, intervalTime);
       increment++;
       if (intervalTime > 50) {
-          intervalTime -= 10;
+        intervalTime -= 10;
       }
 
       //SETTING GAMEOVER CIRCUMSTANCES
       if (playerMesh.position.y < -30) {
-         gameOver = true;
+        gameOver = true;
       }
-
-      // function deleteMesh(meshName) {
-      //    if (meshName.position.y < 0) {
-      //       meshName.dispose();
-      //    }
-      // }
 
     };
     interval();
 
+    //GUI
+    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+    var rect1 = new BABYLON.GUI.Rectangle();
+    rect1.width = 0.2;
+    rect1.height = "40px";
+    rect1.cornerRadius = 20;
+    rect1.color = "Orange";
+    rect1.thickness = 4;
+    rect1.background = "green";
+    advancedTexture.addControl(rect1);   
+
+
+    //SHAPE DESTRUCTOR
     // To allow the simulation to run indefinitely, let's track how many entities are in-play, and kill anything that falls into the abyss
     const MAX_ENTITIES = 400;
     const DIE_AT_Y = -25;
@@ -184,20 +193,20 @@ window.addEventListener('DOMContentLoaded', function () {
     let entities = [];
     function addEntity (entity, imposter) {
       if (entity && imposter) {
-          entities.push([entity, imposter]);
-          entityCount++;
+        entities.push([entity, imposter]);
+        entityCount++;
       }
     }
     function pruneEntities() {
       let entity, imposter;
       for (let i=0; i < entities.length; i++) {
-          [entity, imposter] = entities[i]; // Array destructuring!
-          if (entity.position.y < DIE_AT_Y) {
-              entity.dispose();
-              imposter.dispose();
-              entities.splice(i, 1); // Delete the entity from our entity list.
-              entityCount--;
-          }
+        [entity, imposter] = entities[i]; // Array destructuring!
+        if (entity.position.y < DIE_AT_Y) {
+          entity.dispose();
+          imposter.dispose();
+          entities.splice(i, 1); // Delete the entity from our entity list.
+          entityCount--;
+        }
       }
     }
 
@@ -207,51 +216,51 @@ window.addEventListener('DOMContentLoaded', function () {
       console.log("newshape called");
       if (entityCount < MAX_ENTITIES) {
         if (increment % 2 === 0) {
-            var newSphere = BABYLON.Mesh.CreateSphere("genSphere", 16, getRandom(0.5, 3), scene);
+          var newSphere = BABYLON.Mesh.CreateSphere("genSphere", 16, getRandom(0.5, 3), scene);
 
-            var newSphereMaterial = new BABYLON.StandardMaterial("playerMaterial", scene);
-            newSphereMaterial.diffuseColor = new BABYLON.Color3(getRandom(0.5, 6), getRandom(0.5, 6), getRandom(0.5, 3));
-            newSphere.material = newSphereMaterial;
-            newSphere.position.y = getRandom(15, 35);
-            newSphere.position.x = getRandom(-5, 5);
-            newSphere.position.z = getRandom(-5, 5);
-            newSphere.physicsImpostor = new BABYLON.PhysicsImpostor(newSphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: getRandom(10, 20), restitution: getRandom(0.4, 0.6) }, scene);
-            addEntity(newSphere, newSphere.physicsImpostor);
+          var newSphereMaterial = new BABYLON.StandardMaterial("playerMaterial", scene);
+          newSphereMaterial.diffuseColor = new BABYLON.Color3(getRandom(0.5, 6), getRandom(0.5, 6), getRandom(0.5, 3));
+          newSphere.material = newSphereMaterial;
+          newSphere.position.y = getRandom(15, 35);
+          newSphere.position.x = getRandom(-5, 5);
+          newSphere.position.z = getRandom(-5, 5);
+          newSphere.physicsImpostor = new BABYLON.PhysicsImpostor(newSphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: getRandom(10, 20), restitution: getRandom(0.4, 0.6) }, scene);
+          addEntity(newSphere, newSphere.physicsImpostor);
         }
 
         if (increment % 2 === 1) {
-            var newBox = BABYLON.MeshBuilder.CreateBox("genBox", { height: getRandom(0.5, 3), width: getRandom(0.5, 3), depth: getRandom(0.5, 3) }, scene);
+          var newBox = BABYLON.MeshBuilder.CreateBox("genBox", { height: getRandom(0.5, 3), width: getRandom(0.5, 3), depth: getRandom(0.5, 3) }, scene);
 
-            var newBoxMaterial = new BABYLON.StandardMaterial("playerMaterial", scene);
-            newBoxMaterial.diffuseColor = new BABYLON.Color3(getRandom(0.5, 6), getRandom(0.5, 6), getRandom(0.5, 3));
-            newBox.material = newBoxMaterial;
+          var newBoxMaterial = new BABYLON.StandardMaterial("playerMaterial", scene);
+          newBoxMaterial.diffuseColor = new BABYLON.Color3(getRandom(0.5, 6), getRandom(0.5, 6), getRandom(0.5, 3));
+          newBox.material = newBoxMaterial;
 
-            newBox.rotate(BABYLON.Axis.X, Math.PI / getRandom(1, 4), BABYLON.Space.WORLD);
-            newBox.rotate(BABYLON.Axis.Y, Math.PI / getRandom(1, 4), BABYLON.Space.WORLD);
-            newBox.position.y = getRandom(15, 35);
-            newBox.position.x = getRandom(-5, 5);
-            newBox.position.z = getRandom(-5, 5);
-            newBox.physicsImpostor = new BABYLON.PhysicsImpostor(newBox, BABYLON.PhysicsImpostor.BoxImpostor, { mass: getRandom(10, 20), restitution: getRandom(0.4, 0.6) }, scene);
-            addEntity(newBox, newBox.physicsImpostor);
+          newBox.rotate(BABYLON.Axis.X, Math.PI / getRandom(1, 4), BABYLON.Space.WORLD);
+          newBox.rotate(BABYLON.Axis.Y, Math.PI / getRandom(1, 4), BABYLON.Space.WORLD);
+          newBox.position.y = getRandom(15, 35);
+          newBox.position.x = getRandom(-5, 5);
+          newBox.position.z = getRandom(-5, 5);
+          newBox.physicsImpostor = new BABYLON.PhysicsImpostor(newBox, BABYLON.PhysicsImpostor.BoxImpostor, { mass: getRandom(10, 20), restitution: getRandom(0.4, 0.6) }, scene);
+          addEntity(newBox, newBox.physicsImpostor);
         }
 
         if (increment % 3 === 0) {
-            var newSphere = BABYLON.Mesh.CreateSphere("genSphere", 16, getRandom(0.5, 3), scene);
+          var newSphere = BABYLON.Mesh.CreateSphere("genSphere", 16, getRandom(0.5, 3), scene);
 
-            var newSphereMaterial = new BABYLON.StandardMaterial("playerMaterial", scene);
-            newSphereMaterial.diffuseColor = new BABYLON.Color3(getRandom(0.5, 6), getRandom(0.5, 6), getRandom(0.5, 3));
-            newSphere.material = newSphereMaterial;
-            newSphere.position.y = getRandom(15, 35);
-            newSphere.position.x = getRandom(-5, 5);
-            newSphere.position.z = getRandom(-5, 5);
-            newSphere.physicsImpostor = new BABYLON.PhysicsImpostor(newSphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: getRandom(10, 20), restitution: getRandom(0.4, 0.6) }, scene);
-            addEntity(newSphere, newSphere.physicsImpostor);
+          var newSphereMaterial = new BABYLON.StandardMaterial("playerMaterial", scene);
+          newSphereMaterial.diffuseColor = new BABYLON.Color3(getRandom(0.5, 6), getRandom(0.5, 6), getRandom(0.5, 3));
+          newSphere.material = newSphereMaterial;
+          newSphere.position.y = getRandom(15, 35);
+          newSphere.position.x = getRandom(-5, 5);
+          newSphere.position.z = getRandom(-5, 5);
+          newSphere.physicsImpostor = new BABYLON.PhysicsImpostor(newSphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: getRandom(10, 20), restitution: getRandom(0.4, 0.6) }, scene);
+          addEntity(newSphere, newSphere.physicsImpostor);
         }
       }
       pruneEntities();
       console.log(entityCount);        
       if (gameOver === false) {
-          interval();
+        interval();
       }
     };
     // RETURN THE SCENE
