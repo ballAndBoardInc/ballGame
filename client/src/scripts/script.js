@@ -204,15 +204,17 @@ window.addEventListener('DOMContentLoaded', function () {
     }
 
     // RESTART BUTTON
-    var button = BABYLON.GUI.Button.CreateSimpleButton("but", "Restart");
-    button.width = 0.2;
-    button.height = "40px";
-    button.color = "white";
-    button.background = "green";
-    button.onPointerDownObservable.add(function() {
-        window.dispatchEvent(new Event('game_restart'));
-    });
-    advancedTexture.addControl(button);
+    var showRestartButton = () => {
+        var button = BABYLON.GUI.Button.CreateSimpleButton("but", "Restart");
+        button.width = 0.2;
+        button.height = "40px";
+        button.color = "white";
+        button.background = "green";
+        button.onPointerDownObservable.add(function() {
+            window.dispatchEvent(new Event('game_restart'));
+        });
+        advancedTexture.addControl(button);
+    }
 
     //INTERVAL AND SHAPE GENERATOR
     // This function is used to accelerate the rate of shapes dropping to increase the difficulty.
@@ -311,6 +313,8 @@ window.addEventListener('DOMContentLoaded', function () {
       console.log(entityCount);        
       if (gameOver === false) {
         interval();
+      } else {
+        showRestartButton();
       }
     };
     // RETURN THE SCENE
