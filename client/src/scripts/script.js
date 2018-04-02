@@ -178,14 +178,18 @@ window.addEventListener('DOMContentLoaded', function () {
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
     var rect1 = new BABYLON.GUI.Rectangle();
-    rect1.width = 0.2;
+    rect1.width = 0.1;
     rect1.height = "40px";
     rect1.cornerRadius = 0;
     rect1.color = "white";
     rect1.thickness = 2;
+    rect1.alpha = 0.8;
     rect1.background = "black";
     rect1.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
     rect1.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    rect1.top = "20px";
+    rect1.left = "20px";
+
     advancedTexture.addControl(rect1);
 
 
@@ -193,11 +197,10 @@ window.addEventListener('DOMContentLoaded', function () {
     iterationText.text = "Hello world";
     iterationText.color = "white";
     iterationText.fontSize = 24;
-    iterationText.parent = rect1;
-    advancedTexture.addControl(iterationText);  
+    rect1.addControl(iterationText);
 
     function displayIterationText (text) {
-        iterationText.text = `Iterations: ${text}`;
+        iterationText.text = `Waves: ${text}`;
     }
 
     //INTERVAL AND SHAPE GENERATOR
