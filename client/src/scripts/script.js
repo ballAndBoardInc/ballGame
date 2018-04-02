@@ -203,6 +203,17 @@ window.addEventListener('DOMContentLoaded', function () {
         iterationText.text = `Waves: ${text}`;
     }
 
+    // RESTART BUTTON
+    var button = BABYLON.GUI.Button.CreateSimpleButton("but", "Restart");
+    button.width = 0.2;
+    button.height = "40px";
+    button.color = "white";
+    button.background = "green";
+    button.onPointerDownObservable.add(function() {
+        window.dispatchEvent(new Event('game_restart'));
+    });
+    advancedTexture.addControl(button);
+
     //INTERVAL AND SHAPE GENERATOR
     // This function is used to accelerate the rate of shapes dropping to increase the difficulty.
     let increment = 1;
@@ -313,6 +324,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
   // CALLED SCENES
   var scene = createScene();
+
+  window.addEventListener('game_restart', function () {
+      console.log('restart');
+      scene.dispose();
+      scene = createScene();
+  });
 
   // THE RENDER LOOP
   engine.runRenderLoop(function () {
