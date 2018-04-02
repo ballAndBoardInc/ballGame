@@ -1,8 +1,8 @@
 console.log('main.js is linked up')
 
 import * as BABYLON from 'babylonjs';
-// import * as GUI from 'babylonjs-gui';
-
+import * as GUI from 'babylonjs-gui';
+BABYLON.GUI = GUI;
 // var ctx = document.querySelector("canvas").getContext("2d");
 
 // window.addEventListener("keydown", function (e) {
@@ -131,6 +131,7 @@ window.addEventListener('DOMContentLoaded', function () {
         }
       )
     );
+    
 
 
     //PLANES
@@ -173,6 +174,32 @@ window.addEventListener('DOMContentLoaded', function () {
     flatPlane.position.y = -15;
     flatPlane.rotate(BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.WORLD);
 
+    // GUI
+    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+    var rect1 = new BABYLON.GUI.Rectangle();
+    rect1.width = 0.2;
+    rect1.height = "40px";
+    rect1.cornerRadius = 0;
+    rect1.color = "white";
+    rect1.thickness = 2;
+    rect1.background = "black";
+    rect1.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    rect1.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    advancedTexture.addControl(rect1);
+
+
+    var iterationText = new BABYLON.GUI.TextBlock();
+    iterationText.text = "Hello world";
+    iterationText.color = "white";
+    iterationText.fontSize = 24;
+    iterationText.parent = rect1;
+    advancedTexture.addControl(iterationText);  
+
+    function displayIterationText (text) {
+        iterationText.text = `Iterations: ${text}`;
+    }
+
     //INTERVAL AND SHAPE GENERATOR
     // This function is used to accelerate the rate of shapes dropping to increase the difficulty.
     let increment = 1;
@@ -181,6 +208,7 @@ window.addEventListener('DOMContentLoaded', function () {
     function interval() {
       let interval = setTimeout(newShape, intervalTime);
       increment++;
+      displayIterationText(increment);
       if (intervalTime > 50) {
         intervalTime -= 10;
       }
@@ -192,19 +220,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
     };
     interval();
-
-    //GUI
-    // var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-
-    // var rect1 = new BABYLON.GUI.Rectangle();
-    // rect1.width = 0.2;
-    // rect1.height = "40px";
-    // rect1.cornerRadius = 20;
-    // rect1.color = "Orange";
-    // rect1.thickness = 4;
-    // rect1.background = "green";
-    // advancedTexture.addControl(rect1);   
-
 
     //SHAPE DESTRUCTOR
     // To allow the simulation to run indefinitely, let's track how many entities are in-play, and kill anything that falls into the abyss
