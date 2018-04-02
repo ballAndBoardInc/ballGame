@@ -174,11 +174,14 @@ window.addEventListener('DOMContentLoaded', function () {
     flatPlane.position.y = -15;
     flatPlane.rotate(BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.WORLD);
 
+
+
+
     // GUI
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
     var rect1 = new BABYLON.GUI.Rectangle();
-    rect1.width = 0.1;
+    rect1.width = "200px";
     rect1.height = "40px";
     rect1.cornerRadius = 0;
     rect1.color = "white";
@@ -192,16 +195,45 @@ window.addEventListener('DOMContentLoaded', function () {
 
     advancedTexture.addControl(rect1);
 
-
     var iterationText = new BABYLON.GUI.TextBlock();
     iterationText.text = "Hello world";
     iterationText.color = "white";
-    iterationText.fontSize = 24;
+    iterationText.fontSize = 20;
     rect1.addControl(iterationText);
 
     function displayIterationText (text) {
         iterationText.text = `Waves: ${text}`;
     }
+
+
+    var rect2 = new BABYLON.GUI.Rectangle();
+    rect2.width = "200px";
+    rect2.height = "100px";
+    rect2.cornerRadius = 0;
+    rect2.color = "white";
+    rect2.thickness = 2;
+    rect2.alpha = 0.8;
+    rect2.background = "black";
+    rect2.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    rect2.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    rect2.top = "80px";
+    rect2.left = "20px";
+
+    advancedTexture.addControl(rect2);
+
+    var instructionText = new BABYLON.GUI.TextBlock();
+    instructionText.text = "Don't fall off the platform!\nControl the glowing ball\nwith the W,A,S,D keys.";
+    instructionText.color = "white";
+    instructionText.fontSize = 15;
+    rect2.addControl(instructionText);
+
+    // function displayinstructionText (text) {
+    //     instructionText.text = "Welcome to the game";
+    // }
+
+
+
+
 
     //INTERVAL AND SHAPE GENERATOR
     // This function is used to accelerate the rate of shapes dropping to increase the difficulty.
