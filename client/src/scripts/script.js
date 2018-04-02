@@ -31,15 +31,23 @@ window.addEventListener('DOMContentLoaded', function () {
     // This creates a basic Babylon Scene object (non-mesh)
     var scene = new BABYLON.Scene(engine);
 
+    //ENVIRONMENT
+    scene.clearColor = new BABYLON.Color3(63/255, 15/255, 15/255);
+    // var helper = scene.createDefaultEnvironment({
+    //   enableGroundMirror: true
+    // });       
+
+    // helper.setMainColor(BABYLON.Color3.Teal());
+
     //PHYSICS
     scene.enablePhysics();
 
     //CAMERA
     // This creates and positions a free camera (non-mesh)
-    var camera = new BABYLON.UniversalCamera("camera1", new BABYLON.Vector3(10, 5, 80), scene);
+    var camera = new BABYLON.UniversalCamera("camera1", new BABYLON.Vector3(15, 20, 85), scene);
 
-    // This targets the camera to scene origin
-    camera.setTarget(BABYLON.Vector3.Zero());
+    // This targets the camera 
+    camera.setTarget(new BABYLON.Vector3(0, -10, 5));
 
     // This attaches the camera to the canvas
     camera.attachControl(canvas, false);
@@ -49,16 +57,20 @@ window.addEventListener('DOMContentLoaded', function () {
     var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
     light.intensity = 0.7;
 
+    //POINTLIGHT
+    // var pointLight = new BABYLON.PointLight("pointLight", new BABYLON.Vector3(1, 1, 1), scene);
+
     //GLOW FOR EMMISSIVE LIGHTS
     var gl = new BABYLON.GlowLayer("glow", scene);
+    gl.intensity = 0.5;
 
     //OBJECTS
 
     // PLAYER SPHERE Params: name, subdivs, size, scene
     var playerMesh = BABYLON.Mesh.CreateSphere("playerSphere", 16, 1.5, scene);
     var playerMaterial = new BABYLON.StandardMaterial("playerMaterial", scene);
-    playerMaterial.diffuseColor = new BABYLON.Color3(255, 255, 255);
-    playerMaterial.emissiveColor = new BABYLON.Color3(255, 255, 255);
+    playerMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
+    playerMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
     playerMaterial.wireframe = true;
     playerMesh.material = playerMaterial;
 
@@ -125,8 +137,10 @@ window.addEventListener('DOMContentLoaded', function () {
 
     //ANGLED PLANE
     var angledPlane = BABYLON.MeshBuilder.CreatePlane("angledPlane", { width: 15, height: 45, sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene);
-    var angledPlaneMaterial = new BABYLON.StandardMaterial("playerMaterial", scene);
+    var angledPlaneMaterial = new BABYLON.StandardMaterial("angledPlaneMaterial", scene);
     angledPlaneMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    angledPlaneMaterial.emissiveColor = new BABYLON.Color3(33 / 255, 8 / 255, 79 / 255);
+    // angledPlaneMaterial.specularColor = new BABYLON.Color3(59, 239, 224);
     angledPlane.material = angledPlaneMaterial;
 
     //ANGLED PLANE IMPOSTER
@@ -134,21 +148,28 @@ window.addEventListener('DOMContentLoaded', function () {
 
     //FLAT PLANE
     var flatPlane = BABYLON.MeshBuilder.CreatePlane("flatPlane", { width: 15, height: 15, sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene);
-    var flatPlaneMaterial = new BABYLON.StandardMaterial("playerMaterial", scene);
+    var flatPlaneMaterial = new BABYLON.StandardMaterial("flatPlaneMaterial", scene);
     flatPlaneMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    flatPlaneMaterial.emissiveColor = new BABYLON.Color3(33 / 255, 8 / 255, 79 / 255);
+    // flatPlaneMaterial.specularColor = new BABYLON.Color3(59, 239, 224);
     flatPlane.material = flatPlaneMaterial;
 
     //FLAT PLANE IMPOSTER
     flatPlane.physicsImpostor = new BABYLON.PhysicsImpostor(flatPlane, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.9 }, scene);
 
     //POSITION AND ROTATE
+    // pointLight.position.z = -10;
+    // pointLight.position.y = 50;
+    // pointLight.position.x = 0;
+
     playerMesh.position.z = 26;
     playerMesh.position.y = -14;
 
     angledPlane.position.z = 10;
+    angledPlane.position.y = 2;
     angledPlane.rotate(BABYLON.Axis.X, Math.PI / 1.3, BABYLON.Space.WORLD);
 
-    flatPlane.position.z = 30;
+    flatPlane.position.z = 32;
     flatPlane.position.y = -15;
     flatPlane.rotate(BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.WORLD);
 
@@ -223,7 +244,7 @@ window.addEventListener('DOMContentLoaded', function () {
           newSphere.material = newSphereMaterial;
           newSphere.position.y = getRandom(15, 35);
           newSphere.position.x = getRandom(-5, 5);
-          newSphere.position.z = getRandom(-5, 5);
+          newSphere.position.z = getRandom(0, 5);
           newSphere.physicsImpostor = new BABYLON.PhysicsImpostor(newSphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: getRandom(10, 20), restitution: getRandom(0.4, 0.6) }, scene);
           addEntity(newSphere, newSphere.physicsImpostor);
         }
@@ -239,7 +260,7 @@ window.addEventListener('DOMContentLoaded', function () {
           newBox.rotate(BABYLON.Axis.Y, Math.PI / getRandom(1, 4), BABYLON.Space.WORLD);
           newBox.position.y = getRandom(15, 35);
           newBox.position.x = getRandom(-5, 5);
-          newBox.position.z = getRandom(-5, 5);
+          newBox.position.z = getRandom(0, 5);
           newBox.physicsImpostor = new BABYLON.PhysicsImpostor(newBox, BABYLON.PhysicsImpostor.BoxImpostor, { mass: getRandom(10, 20), restitution: getRandom(0.4, 0.6) }, scene);
           addEntity(newBox, newBox.physicsImpostor);
         }
@@ -252,7 +273,7 @@ window.addEventListener('DOMContentLoaded', function () {
           newSphere.material = newSphereMaterial;
           newSphere.position.y = getRandom(15, 35);
           newSphere.position.x = getRandom(-5, 5);
-          newSphere.position.z = getRandom(-5, 5);
+          newSphere.position.z = getRandom(0, 5);
           newSphere.physicsImpostor = new BABYLON.PhysicsImpostor(newSphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: getRandom(10, 20), restitution: getRandom(0.4, 0.6) }, scene);
           addEntity(newSphere, newSphere.physicsImpostor);
         }
