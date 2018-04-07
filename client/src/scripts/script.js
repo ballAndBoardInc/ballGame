@@ -214,10 +214,10 @@ window.addEventListener('DOMContentLoaded', function () {
     }
 
     // RESTART BUTTON
-    var showRestartButton = () => {
-        var button = BABYLON.GUI.Button.CreateSimpleButton("but", "Restart");
-        button.width = 0.2;
-        button.height = "40px";
+    var showRestartButton = (increment) => {
+        var button = BABYLON.GUI.Button.CreateSimpleButton("but",`Nice! You survived ${increment} waves.\n Click to restart!`);
+        button.width = "360px";
+        button.height = "60px";
         button.color = "white";
         button.background = "green";
         button.onPointerDownObservable.add(function() {
@@ -346,7 +346,7 @@ window.addEventListener('DOMContentLoaded', function () {
       if (gameOver === false) {
         interval();
       } else {
-        showRestartButton();
+        showRestartButton(increment);
       }
     };
     // RETURN THE SCENE
