@@ -213,6 +213,18 @@ window.addEventListener('DOMContentLoaded', function () {
         iterationText.text = `Waves: ${text}`;
     }
 
+    // RESTART BUTTON
+    var showRestartButton = () => {
+        var button = BABYLON.GUI.Button.CreateSimpleButton("but", "Restart");
+        button.width = 0.2;
+        button.height = "40px";
+        button.color = "white";
+        button.background = "green";
+        button.onPointerDownObservable.add(function() {
+            window.dispatchEvent(new Event('game_restart'));
+        });
+        advancedTexture.addControl(button);
+    }
 
     var rect2 = new BABYLON.GUI.Rectangle();
     rect2.width = "200px";
@@ -333,6 +345,8 @@ window.addEventListener('DOMContentLoaded', function () {
       // console.log(entityCount);        
       if (gameOver === false) {
         interval();
+      } else {
+        showRestartButton();
       }
     };
     // RETURN THE SCENE
@@ -346,6 +360,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
   // CALLED SCENES
   var scene = createScene();
+
+  window.addEventListener('game_restart', function () {
+      console.log('restart');
+      scene.dispose();
+      scene = createScene();
+  });
 
   // THE RENDER LOOP
   engine.runRenderLoop(function () {
