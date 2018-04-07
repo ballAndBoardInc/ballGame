@@ -78,7 +78,6 @@ window.addEventListener('DOMContentLoaded', function () {
     //CHANGING DEFAULT KEYBOARD INPUTS.
 
     function KeyboardController(keys, repeat) {
-
       
       var timers = {};
 
@@ -141,60 +140,6 @@ window.addEventListener('DOMContentLoaded', function () {
     }, 50);
 
 
-    //CONTROLS
-
-    // scene.actionManager = new BABYLON.ActionManager(scene);
-
-    // scene.actionManager.registerAction(
-    //   new BABYLON.ExecuteCodeAction(
-    //     {
-    //       trigger: BABYLON.ActionManager.OnKeyDownTrigger,
-    //       parameter: 'a'
-    //     },
-    //     function () { 
-    //       // console.log('a pressed'); 
-    //       playerMesh.applyImpulse(new BABYLON.Vector3(10, 0, 0), playerMesh.getAbsolutePosition());
-    //     }
-    //   )
-    // );
-
-    // scene.actionManager.registerAction(
-    //   new BABYLON.ExecuteCodeAction(
-    //     {
-    //       trigger: BABYLON.ActionManager.OnKeyDownTrigger,
-    //       parameter: 'w'
-    //     },
-    //     function () { 
-    //       // // console.log('w pressed'); 
-    //       playerMesh.applyImpulse(new BABYLON.Vector3(0, 0, -10), playerMesh.getAbsolutePosition());
-    //     }
-    //   )
-    // );
-    // scene.actionManager.registerAction(
-    //   new BABYLON.ExecuteCodeAction(
-    //     {
-    //       trigger: BABYLON.ActionManager.OnKeyDownTrigger,
-    //       parameter: 'd'
-    //     },
-    //     function () { 
-    //       // console.log('d pressed'); 
-    //       playerMesh.applyImpulse(new BABYLON.Vector3(-10, 0, 0), playerMesh.getAbsolutePosition());
-    //     }
-    //   )
-    // );
-    // scene.actionManager.registerAction(
-    //   new BABYLON.ExecuteCodeAction(
-    //     {
-    //       trigger: BABYLON.ActionManager.OnKeyDownTrigger,
-    //       parameter: 's'
-    //     },
-    //     function () { 
-    //       // console.log('s pressed'); 
-    //       playerMesh.applyImpulse(new BABYLON.Vector3(0, 0, 10), playerMesh.getAbsolutePosition());
-    //     }
-    //   )
-    // );
-    
 
 
     //PLANES
@@ -289,13 +234,6 @@ window.addEventListener('DOMContentLoaded', function () {
     instructionText.color = "white";
     instructionText.fontSize = 15;
     rect2.addControl(instructionText);
-
-    // function displayinstructionText (text) {
-    //     instructionText.text = "Welcome to the game";
-    // }
-
-
-
 
 
     //INTERVAL AND SHAPE GENERATOR
