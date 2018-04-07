@@ -1,14 +1,8 @@
-console.log('main.js is linked up')
+// console.log('main.js is linked up')
 
 import * as BABYLON from 'babylonjs';
 import * as GUI from 'babylonjs-gui';
 BABYLON.GUI = GUI;
-// var ctx = document.querySelector("canvas").getContext("2d");
-
-// window.addEventListener("keydown", function (e) {
-//   e.preventDefault();
-//   ctx.fillText(e.keyCode, Math.random() * 300, Math.random() * 150);
-// });
 
 window.addEventListener('DOMContentLoaded', function () {
 
@@ -40,7 +34,9 @@ window.addEventListener('DOMContentLoaded', function () {
     // helper.setMainColor(BABYLON.Color3.Teal());
 
     //PHYSICS
-    scene.enablePhysics();
+    var gravityVector = new BABYLON.Vector3(0,-19.81, 0);
+    var physicsPlugin = new BABYLON.CannonJSPlugin();
+    scene.enablePhysics(gravityVector, physicsPlugin);
 
     //CAMERA
     // This creates and positions a free camera (non-mesh)
@@ -75,63 +71,75 @@ window.addEventListener('DOMContentLoaded', function () {
     playerMesh.material = playerMaterial;
 
     // PLAYER IMPOSTER
-    playerMesh.physicsImpostor = new BABYLON.PhysicsImpostor(playerMesh, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 2, restitution: 0.5 }, scene);
+    playerMesh.physicsImpostor = new BABYLON.PhysicsImpostor(playerMesh, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 2, friction: 1, restitution: 0.5 }, scene);
 
     //PLAYER CONTROLS
-    // CONTROLS
 
-    scene.actionManager = new BABYLON.ActionManager(scene);
+    //CHANGING DEFAULT KEYBOARD INPUTS.
 
-    scene.actionManager.registerAction(
-      new BABYLON.ExecuteCodeAction(
-        {
-          trigger: BABYLON.ActionManager.OnKeyDownTrigger,
-          parameter: 'a'
-        },
-        function () { 
-          console.log('a pressed'); 
-          playerMesh.applyImpulse(new BABYLON.Vector3(10, 0, 0), playerMesh.getAbsolutePosition());
-        }
-      )
-    );
+    function KeyboardController(keys, repeat) {
+      
+      var timers = {};
 
-    scene.actionManager.registerAction(
-      new BABYLON.ExecuteCodeAction(
-        {
-          trigger: BABYLON.ActionManager.OnKeyDownTrigger,
-          parameter: 'w'
-        },
-        function () { 
-          console.log('w pressed'); 
-          playerMesh.applyImpulse(new BABYLON.Vector3(0, 0, -10), playerMesh.getAbsolutePosition());
+      // When key is pressed and we don't already think it's pressed, call the
+      // key action callback and set a timer to generate another one after a delay
+      //
+      document.onkeydown = function (event) {
+        // console.log(event);
+        // console.log(keys);
+        var key = (event || window.event).keyCode;
+        if (!(key in keys))
+          return true;
+        if (!(key in timers)) {
+          timers[key] = null;
+          keys[key]();
+          if (repeat !== 0)
+            timers[key] = setInterval(keys[key], repeat);
         }
-      )
-    );
-    scene.actionManager.registerAction(
-      new BABYLON.ExecuteCodeAction(
-        {
-          trigger: BABYLON.ActionManager.OnKeyDownTrigger,
-          parameter: 'd'
-        },
-        function () { 
-          console.log('d pressed'); 
-          playerMesh.applyImpulse(new BABYLON.Vector3(-10, 0, 0), playerMesh.getAbsolutePosition());
+        return false;
+      };
+
+      // Cancel timeout and mark key as released on keyup
+      //
+      document.onkeyup = function (event) {
+        var key = (event || window.event).keyCode;
+        if (key in timers) {
+          if (timers[key] !== null)
+            clearInterval(timers[key]);
+          delete timers[key];
         }
-      )
-    );
-    scene.actionManager.registerAction(
-      new BABYLON.ExecuteCodeAction(
-        {
-          trigger: BABYLON.ActionManager.OnKeyDownTrigger,
-          parameter: 's'
-        },
-        function () { 
-          console.log('s pressed'); 
-          playerMesh.applyImpulse(new BABYLON.Vector3(0, 0, 10), playerMesh.getAbsolutePosition());
-        }
-      )
-    );
-    
+      };
+
+      // When window is unfocused we may not get key events. To prevent this
+      // causing a key to 'get stuck down', cancel all held keys
+      //
+      window.onblur = function () {
+        for (key in timers)
+          if (timers[key] !== null)
+            clearInterval(timers[key]);
+        timers = {};
+      };
+    };
+    then:
+
+    KeyboardController({
+
+      // a key
+      65: () => playerMesh.applyImpulse(new BABYLON.Vector3(5, 0, 0), playerMesh.getAbsolutePosition()),
+
+      // w key
+      87: () => playerMesh.applyImpulse(new BABYLON.Vector3(0, 0, -5), playerMesh.getAbsolutePosition()),
+
+      // d key
+      68: () => playerMesh.applyImpulse(new BABYLON.Vector3(-5, 0, 0), playerMesh.getAbsolutePosition()),
+
+      // s key
+      83: () => playerMesh.applyImpulse(new BABYLON.Vector3(0, 0, 5), playerMesh.getAbsolutePosition())
+
+      // this is the delay between repeats
+    }, 50);
+
+
 
 
     //PLANES
@@ -174,11 +182,14 @@ window.addEventListener('DOMContentLoaded', function () {
     flatPlane.position.y = -15;
     flatPlane.rotate(BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.WORLD);
 
+
+
+
     // GUI
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
     var rect1 = new BABYLON.GUI.Rectangle();
-    rect1.width = 0.1;
+    rect1.width = "200px";
     rect1.height = "40px";
     rect1.cornerRadius = 0;
     rect1.color = "white";
@@ -192,16 +203,38 @@ window.addEventListener('DOMContentLoaded', function () {
 
     advancedTexture.addControl(rect1);
 
-
     var iterationText = new BABYLON.GUI.TextBlock();
     iterationText.text = "Hello world";
     iterationText.color = "white";
-    iterationText.fontSize = 24;
+    iterationText.fontSize = 20;
     rect1.addControl(iterationText);
 
     function displayIterationText (text) {
         iterationText.text = `Waves: ${text}`;
     }
+
+
+    var rect2 = new BABYLON.GUI.Rectangle();
+    rect2.width = "200px";
+    rect2.height = "100px";
+    rect2.cornerRadius = 0;
+    rect2.color = "white";
+    rect2.thickness = 2;
+    rect2.alpha = 0.8;
+    rect2.background = "black";
+    rect2.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    rect2.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    rect2.top = "80px";
+    rect2.left = "20px";
+
+    advancedTexture.addControl(rect2);
+
+    var instructionText = new BABYLON.GUI.TextBlock();
+    instructionText.text = "Don't fall off the platform!\nControl the glowing ball\nwith the W,A,S,D keys.";
+    instructionText.color = "white";
+    instructionText.fontSize = 15;
+    rect2.addControl(instructionText);
+
 
     //INTERVAL AND SHAPE GENERATOR
     // This function is used to accelerate the rate of shapes dropping to increase the difficulty.
@@ -252,7 +285,7 @@ window.addEventListener('DOMContentLoaded', function () {
     //NEW SHAPES FUNCTION
     // Based on the time interval, this creates randomly sized/coloured shapes.
     function newShape() {
-      console.log("newshape called");
+      // console.log("newshape called");
       if (entityCount < MAX_ENTITIES) {
         if (increment % 2 === 0) {
           var newSphere = BABYLON.Mesh.CreateSphere("genSphere", 16, getRandom(0.5, 3), scene);
@@ -297,7 +330,7 @@ window.addEventListener('DOMContentLoaded', function () {
         }
       }
       pruneEntities();
-      console.log(entityCount);        
+      // console.log(entityCount);        
       if (gameOver === false) {
         interval();
       }
